@@ -5,6 +5,7 @@ const jsonwebtoken = require('jsonwebtoken');
 const empty = require('is-empty');
 const Validator = require('Validator');
 const paginate = require('express-paginate');
+const path = require('path');
 const RESPONSE_CODE_NOT_FOUND = 404;
 const RESPONSE_CODE_UN_AUTHORIZATION = 401;
 const RESPONSE_CODE_BAD_REQUEST = 500;
@@ -50,7 +51,29 @@ class Controller {
         this.req = req;
         this.res = res;
         this.table = require("../models/" + TableName + 'Table');
+        this.uploadPath = {};
     };
+    async uploadFile(fieldName) {
+        if (!empty(this.req.files[fieldName])) {
+            let imageData = this.req.files[fieldName];
+            var imagePath = `/upload/image/${ this.req.files[fieldName].name}`;
+            const directoryPath = path.join(__dirname, `../../public/upload/image/new/${this.req.files[fieldName].name}`);
+            // var test = imageData.mv(directoryPath);
+            await imageData.mv(directoryPath).then(() => {
+                this.uploadPath[fieldName] = imagePath;
+            }, (error) => {
+                this.uploadPath[fieldName] = false;
+            });
+        } else {
+            return false
+        }
+    }
+    getInfoUpload(fieldName) {
+        return this.uploadPath[fieldName];
+    }
+    updatData() {
+        console.log(this.req.body);
+    }
     async index() {
         let data = await this.table.find().limit(100).sort().lean().exec();
         this.res.send(data);

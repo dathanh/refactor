@@ -1,0 +1,91 @@
+<div class="ibox float-e-margins">
+    <div>
+        <h5><%= __('Admin User detail') %></h5>
+    </div>
+    <div class="ibox-content">
+        <table class="vertical-table table table-condensed table-striped">
+            <tr>
+                <th>
+                    <%= __('Id') %>
+                </th>
+                <td>
+                    <%= article._id %>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%= __('Name') %>
+                </th>
+                <td>
+                    <%= article.name %>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%= __('Title') %>
+                </th>
+                <td>
+                    <%= article.title %>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%= __('Description') %>
+                </th>
+                <td>
+                    <%= article.description %>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%= __('Thumbnail') %>
+                </th>
+                <td>
+                    <img src="<%= article.thumbnail %>" alt="<%= article.name %>"/>
+                </td>
+            </tr>
+
+            <tr>
+            <tr>
+                <th>
+                    <%= __('Active') %>
+                </th>
+                <td>
+                    <%= (article.status) ? __('Yes') : __('No'); %>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%= __('Created') %>
+                </th>
+                <td>
+                    <%= article.created_date %>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <%= __('Modified') %>
+                </th>
+                <td>
+                    <%= article.updated_date %>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <div class="container-fluid">
+                        <div class="row admin-btn-actions">
+
+                            <a href="/article/index" class="btn btn-white" title="Back to users"><i class="fa fa-chevron-left"></i> Back</a>
+                            <a href="/article/edit/<%= article._id %>" class="btn btn-primary" title="Edit this user"><i class="fa fa-edit"></i> Edit</a>
+                            <form method="post" style="display:none;" action="/admin-users/delete/<%= article._id %>" id="postDelete_<%= article._id %>">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            </form>
+                                <a class="btn btn-danger" onclick='if (confirm("Are you sure you want to delete # <%= article._id %>?")) { document.getElementById("postDelete_<%= article._id %>").submit(); } event.returnValue = false; return false;' href="#"><i class="fa fa-trash-o"></i>Delete</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

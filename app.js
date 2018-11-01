@@ -11,7 +11,7 @@ const port = process.env.PORT || 8042;
 const passport = require('passport');
 const flash = require('connect-flash');
 const path = require('path');
-
+var expressLayouts = require('express-ejs-layouts');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -21,8 +21,11 @@ var now = new Date();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-
-
+app.use(expressLayouts);
+app.use(fileUpload({
+    createParentPath: false
+}));
+var menuContent = require('./config/menu');
 /***************Mongodb configuratrion********************/
 const mongoose = require('mongoose');
 var configDB = require('./config/database.js');
@@ -60,6 +63,15 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
+app.locals = {
+    menuContent: menuContent,
+    checkExist: (prop, obj = {}) => {
+        return obj.hasOwnProperty(prop);
+    },
+    toNum:(string)=>{
+        return parseInt(string);
+    }
+}
 // routes ======================================================================
 require('./config/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
